@@ -19,7 +19,7 @@ module.exports.run = (atlas, message, arguments) => {
         }
 
         message.reply("I have sent you a list of my commands in a Direct Message.");
-        return message.author.send(helpEmbed);
+        message.author.send(helpEmbed);
     }
 };
 
