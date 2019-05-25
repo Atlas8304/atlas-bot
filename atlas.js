@@ -1,35 +1,39 @@
 const Discord = require('discord.js');
-const conf = require('./atlasConf.json');
-const help = require('./help.json');
-const fileSystem = require("fs");
+const conf = require('./json-library/atlasConf.json');
+const fs = require("fs");
 const atlas = new Discord.Client({disableEveryone: true});
 const prefix = conf.prefix;
 
 atlas.commands = new Discord.Collection();
 
-fileSystem.readdir(conf.commandsPath, (error, folders) => {
+fs.readdir(conf.commandsPath, (error, folders) => {
     if (error) {
         console.log(error);
         return;
     }
-
-    let folder;
-    for (folder in folders) {
-        fileSystem.readdir(conf.commandsPath + folder, (error, files) => {
+    console.log(folders);
+    folders.forEach(function (folder) {
+        console.log(folder);
+        console.log(conf.commandsPath + folder);
+        fs.readdir(conf.commandsPath + folder, (error, files) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            console.log(files);
             let jsfile = files.filter(f => f.split(".").pop() === "js");
             if (jsfile === undefined || jsfile.length <= 0) {
-                console.log("Couldn't find any command files.");
-                console.log(files);
-                return;
+                console.log(`Couldn't find any commands in folder [${folder}]`);
+                return
             }
 
             jsfile.forEach((f, i) => {
-                let props = require(`.//${f}`);
+                let props = require(conf.commandsPath + folder + `/${f}`);
                 console.log(`${f} loaded!`);
                 atlas.commands.set(props.help.name, props);
-            })
+            });
         });
-    }
+    })
 });
 
 atlas.login(conf.token);
@@ -41,55 +45,12 @@ atlas.on('ready', () => {
 
 atlas.on('message', message => {
     if (message.author.bot) return; //Avoid bot self message loop
-    if (message.channel.type === "dm") return; //Ignore Direct Message
 
     let messageArray = message.content.split(" ");
     let command = messageArray[0];
     let arguments = messageArray.slice(1);
 
-    if (command === `${prefix}ping`) return message.reply("Pong!");
-
-    if (command === `${prefix}help`) {
-        if (arguments === undefined || arguments.length === 0) {
-            let description = "";
-            for (command in help.commands) {
-                description = description + `\`${prefix}${command}\`` + ' - ' + help.commands[command]['simple'] + '\n';
-            }
-
-            let helpEmbed = new Discord.RichEmbed()
-                .setAuthor("Command List", atlas.user.avatarURL)
-                .setColor("#bfbfbf")
-                .setDescription(description)
-                .setFooter("Atlas here, ready for your command!", atlas.user.avatarURL);
-
-            message.reply("I have sent you a list of my commands in a Direct Message.");
-            return message.author.send(helpEmbed);
-        }
-    }
-
-    if (command === `${prefix}botinfo`) {
-        let botIcon = atlas.user.avatarURL;
-        let botEmbed = new Discord.RichEmbed()
-            .setColor("#15f153")
-            .setThumbnail(botIcon)
-            .addField("Name", atlas.user.tag)
-            .addField("Created on", atlas.user.createdAt);
-
-        return message.channel.send(botEmbed);
-    }
-
-    if (command === `${prefix}serverinfo`) {
-        let onlineCount = message.guild.members.filter(m => m.presence.status === 'online').size;
-        let serverIcon = message.guild.iconURL;
-        let serverEmbed = new Discord.RichEmbed()
-            .setColor("#009933")
-            .setThumbnail(serverIcon)
-            .addField("Server Name", message.guild.name)
-            .addField("Created on", message.guild.createdAt)
-            .addField("Members currently online", onlineCount)
-            .addField("Total Members", message.guild.memberCount);
-
-        return message.channel.send(serverEmbed);
-    }
+    let commandFile = atlas.commands.get(command.slice(prefix.length));
+    if (commandFile) commandFile.run(atlas, message, arguments);
 });
 

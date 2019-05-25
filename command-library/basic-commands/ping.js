@@ -1,7 +1,5 @@
-const Discord = require("discord.js");
-
-module.exports.run = (atlas, message, args) => {
-
+module.exports.run = (atlas, message, arguments) => {
+    message.reply("Pong!");
 };
 
 module.exports.help = {
