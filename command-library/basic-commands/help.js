@@ -6,7 +6,7 @@ module.exports.run = (atlas, message, arguments, prefix) => {
         let helpEmbed = new Discord.RichEmbed()
             .setAuthor("Command List", atlas.user.avatarURL)
             .setColor("#bfbfbf")
-            .setFooter("Atlas here, ready for your command!", atlas.user.avatarURL);
+            .setFooter(`Atlas here, use ${prefix}help [command] to get more information about a command!`, atlas.user.avatarURL);
         for (commandCategory in help) {
             console.log(commandCategory);
             let description = "";

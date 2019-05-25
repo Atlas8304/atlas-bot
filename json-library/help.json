@@ -1,7 +1,7 @@
 {
   "Basic Commands": {
     "help": {
-      "simple":  "Returns a full list of commands the bot will accept.",
+      "simple":  "Returns a full list of commands the bot will accept, or details information about a specified command.",
       "detailed": "To Build",
       "example": ""
     },
@@ -22,6 +22,11 @@
     },
     "changeprefix": {
       "simple":  "Allows a user to change the prefix for Atlas on the current server.",
+      "detailed": "To Build",
+      "example": ""
+    },
+    "clear": {
+      "simple":  "Allows a user to clear a specified number of messages from current channel.",
       "detailed": "To Build",
       "example": ""
     }
