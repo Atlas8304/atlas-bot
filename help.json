@@ -1,5 +1,5 @@
 {
-  "commands": {
+  "basic-commands": {
     "help": {
       "simple":  "Returns a full list of commands the bot will accept.",
       "detailed": "To Build",
@@ -17,6 +17,13 @@
     },
     "serverinfo": {
       "simple":  "Returns basic information about the current server.",
+      "detailed": "To Build",
+      "example": ""
+    }
+  },
+  "music-commands": {
+    "djsearch": {
+      "simple":  "Search for a song.",
       "detailed": "To Build",
       "example": ""
     }

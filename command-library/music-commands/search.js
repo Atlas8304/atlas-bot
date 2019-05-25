@@ -5,5 +5,5 @@ module.exports.run = (atlas, message, args) => {
 };
 
 module.exports.help = {
-    name: "ping"
+    name: "djsearch"
 };
