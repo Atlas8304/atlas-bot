@@ -1,8 +1,18 @@
 const Discord = require("discord.js");
+const fs = require("fs");
 const conf = require('../../json-library/atlasConf.json');
 const help = require('../../json-library/help.json');
 
 module.exports.run = (atlas, message, arguments) => {
+
+    let prefixArray = JSON.parse(fs.readFileSync("/home/john/atlas-bot/json-library/prefixList.json", "utf8"));
+
+    if(!prefixArray[message.guild.id]) {
+        prefixArray[message.guild.id] = {
+            prefix: conf.prefix
+        };
+    }
+
     if (arguments === undefined || arguments.length === 0) {
         let helpEmbed = new Discord.RichEmbed()
             .setAuthor("Command List", atlas.user.avatarURL)
@@ -13,7 +23,7 @@ module.exports.run = (atlas, message, arguments) => {
             let description = "";
             for (command in help[commandCategory]) {
                 console.log(command);
-                description = description + `\`${conf.prefix}${command}\`` + ' - *' + help[commandCategory][command]['simple'] + '*\n';
+                description = description + `\`${prefixArray[message.guild.id].prefix}${command}\`` + ' - *' + help[commandCategory][command]['simple'] + '*\n';
             }
             helpEmbed.addField(commandCategory, description);
         }

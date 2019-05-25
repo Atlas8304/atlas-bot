@@ -19,6 +19,11 @@
       "simple":  "Returns basic information about the current server.",
       "detailed": "To Build",
       "example": ""
+    },
+    "changeprefix": {
+      "simple":  "Allows a user to change the prefix for Atlas on the current server.",
+      "detailed": "To Build",
+      "example": ""
     }
   },
   "Music Commands": {
