@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 
-module.exports.run = (atlas, message, arguments) => {
+module.exports.run = (atlas, message, arguments, prefix) => {
     let onlineCount = message.guild.members.filter(m => m.presence.status === 'online').size;
     let serverIcon = message.guild.iconURL;
     let serverEmbed = new Discord.RichEmbed()

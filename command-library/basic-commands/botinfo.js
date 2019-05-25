@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 
-module.exports.run = (atlas, message, arguments) => {
+module.exports.run = (atlas, message, arguments, prefix) => {
     let botIcon = atlas.user.avatarURL;
     let botEmbed = new Discord.RichEmbed()
         .setColor("#15f153")

@@ -64,6 +64,6 @@ atlas.on('message', message => {
     if (!command.startsWith(prefix)) return; //Command didnt start with prefix
 
     let commandFile = atlas.commands.get(command.slice(prefix.length));
-    if (commandFile) commandFile.run(atlas, message, arguments);
+    if (commandFile) commandFile.run(atlas, message, arguments, prefix);
 });
 

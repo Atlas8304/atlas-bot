@@ -1,4 +1,4 @@
-module.exports.run = (atlas, message, arguments) => {
+module.exports.run = (atlas, message, arguments, prefix) => {
     message.reply("Pong!");
 };
 
