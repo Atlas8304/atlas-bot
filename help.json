@@ -1,0 +1,24 @@
+{
+  "commands": {
+    "help": {
+      "simple":  "Returns a full list of commands the bot will accept.",
+      "detailed": "To Build",
+      "example": ""
+    },
+    "ping": {
+      "simple": "A simple ping to the bot to see if it will respond.",
+      "detailed": "To Build",
+      "example": ""
+    },
+    "botinfo": {
+      "simple":  "Returns basic information about the bot.",
+      "detailed": "To Build",
+      "example": ""
+    },
+    "serverinfo": {
+      "simple":  "Returns basic information about the current server.",
+      "detailed": "To Build",
+      "example": ""
+    }
+  }
+}
