@@ -2,6 +2,7 @@
   "name": "atlas-bot",
   "version": "1.0.0",
   "dependencies": {
-    "discord.js": "latest"
+    "discord.js": "latest",
+    "ytdl-core": "latest"
   }
 }
