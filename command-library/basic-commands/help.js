@@ -25,4 +25,3 @@ module.exports.run = (atlas, message, arguments, prefix) => {
 module.exports.help = {
     name: "help"
 };
-

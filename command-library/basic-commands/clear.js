@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 module.exports.run = (atlas, message, arguments, prefix) => {
     if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply("Only Users/Roles with [Manage Messages] permission can execute this command.");
     if(!message.guild.me.hasPermission("MANAGE_MESSAGES")) return message.reply("I need [Manage Messages] permission to clear messages.");
-    if(arguments === undefined || arguments.length === 0) return message.reply(`Please specify a number of messages to delete, i.e:-  \`${prefix}clear 2\``);
+    if(arguments === undefined || arguments.length === 0 || isNaN(arguments[0])) return message.reply(`Please specify a number of messages to delete, i.e:-  \`${prefix}clear 2\``);
 
     let cleared;
 
