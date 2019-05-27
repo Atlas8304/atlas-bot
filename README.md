@@ -1,2 +1,3 @@
 # atlas-bot
-Multi-Purpose Discord Bot
+
+Personal WIP Multi-Purpose Discord Bot
