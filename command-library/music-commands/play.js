@@ -1,19 +1,39 @@
 const Discord = require("discord.js");
 const ytdl = require('ytdl-core');
+const fs = require("fs");
 
 module.exports.run = async (atlas, message, arguments, prefix, queue) => {
     let serverQueue = queue.get(message.guild.id);
     let voiceChannel = message.member.voiceChannel;
     let botChannel = message.guild.me.voiceChannel;
 
-    if(serverQueue === undefined) { //if for some reason bot goes down on server and still shows as connected to a voice server
+    if (!voiceChannel) {
+        message.delete(2000);
+        message.reply('You need to be in a voice channel to play music!').then(msg => msg.delete(5000));
+        return;
+    }
+    if (!botChannel) {
+        message.delete(2000);
+        message.reply('I need to be in a voice channel to play music!').then(msg => msg.delete(5000));
+        return;
+    }
+    if (voiceChannel !== botChannel) {
+        message.delete(2000);
+        message.reply('I need to be in the same channel as you to allow usage of this command.').then(msg => msg.delete(5000));
+        return;
+    }
+
+    if (serverQueue === undefined) { //if for some reason bot goes down on server and still shows as connected to a voice server
+
+        let guildInfoArray = JSON.parse(fs.readFileSync("/home/john/atlas-bot/json-library/musicVolume.json.json", "utf8"));
+        let guildVolume = guildInfoArray[message.guild.id].volume;
 
         const queueConstruct = {
             textChannel: message.channel,
             voiceChannel: voiceChannel,
             connection: null,
             songs: [],
-            volume: 5,
+            volume: guildVolume,
             playing: false,
         };
 
@@ -23,22 +43,6 @@ module.exports.run = async (atlas, message, arguments, prefix, queue) => {
         serverQueue = queue.get(message.guild.id);
     }
 
-
-    if (!voiceChannel) {
-        message.delete(2000);
-        message.reply('You need to be in a voice channel to play music!').then(msg => msg.delete(5000));
-        return ;
-    }
-    if (!botChannel) {
-        message.delete(2000);
-        message.reply('I need to be in a voice channel to play music!').then(msg => msg.delete(5000));
-        return ;
-    }
-    if (voiceChannel !== botChannel) {
-        message.delete(2000);
-        message.reply('I need to be in the same channel as you to allow usage of this command.').then(msg => msg.delete(5000));
-        return ;
-    }
     if (!message.guild.me.hasPermission('SPEAK')) {
         return message.reply('I need the permission [Speak] to play music!');
     }
@@ -66,28 +70,36 @@ module.exports.run = async (atlas, message, arguments, prefix, queue) => {
         .addField("Channel", song.author.name, true)
         .addField("Position in Queue", serverQueue.songs.length, true);
 
-    message.channel.send("Song Added to the queue!", songEmbed);
+    message.channel.send(songEmbed);
 
     if (!serverQueue.playing === true) stream(serverQueue);
 
-    function stream (serverQueue) {
-        const dispatcher = serverQueue.connection;
+    function stream(serverQueue) {
         let songToPlay = serverQueue.songs[0];
         serverQueue.playing = true;
+        const streamFrom = ytdl(songToPlay.url, {
+            quality: "highestaudio",
+            highWaterMark: 1<<25
+        });
+        const streamOptions = {
+            bitrate: '44100',
+            passes: 3
+        };
+        const dispatcher = serverQueue.connection.playStream(streamFrom, streamOptions);
         message.channel.send(`**Now Playing** - \`${songToPlay.title}\``);
-        dispatcher.playStream(ytdl(songToPlay.url, {filter:'audioonly'}))
-            .on('end', () => {
-                serverQueue.songs.shift();
-                console.log(serverQueue.songs.length);
-                if (serverQueue.songs.length > 0) stream(serverQueue);
-                else {
-                    serverQueue.playing = false;
-                    dispatcher.destroy();
-                }
-            })
-            .on('error', error => {
-                console.error(error);
-            });
+        dispatcher.on('end', end => {
+            console.log(end);
+            serverQueue.songs.shift();
+            console.log(serverQueue.songs.length);
+            if (serverQueue.songs.length > 0) stream(serverQueue);
+            else {
+                serverQueue.playing = false;
+                dispatcher.setSpeaking(false);
+            }
+        });
+        dispatcher.on('error', error => {
+            console.error(error);
+        });
     }
 };
 

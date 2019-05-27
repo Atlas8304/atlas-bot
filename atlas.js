@@ -52,8 +52,12 @@ atlas.on('message', message => {
 
     if (!prefixArray[message.guild.id]) {
         prefixArray[message.guild.id] = {
-            prefix: conf.prefix
+            prefix: conf.prefix,
         };
+
+        fs.writeFile("./json-library/prefixList.json", JSON.stringify(prefixArray), (err) => {
+            if (err) console.log(err);
+        });
     }
 
     let prefix = prefixArray[message.guild.id].prefix;

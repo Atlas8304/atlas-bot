@@ -1,5 +1,4 @@
-const Discord = require("discord.js");
-const ytdl = require('ytdl-core');
+const fs = require("fs");
 
 module.exports.run = async (atlas, message, arguments, prefix, queue) => {
     let voiceChannel = message.member.voiceChannel;
@@ -15,12 +14,26 @@ module.exports.run = async (atlas, message, arguments, prefix, queue) => {
         return ;
     }
 
+    /*let volumeArray = JSON.parse(fs.readFileSync("/home/john/atlas-bot/json-library/musicVolume.json", "utf8"));
+
+    if(!volumeArray[message.guild.id]) {
+        volumeArray[message.guild.id] = {
+            volume: '0.5'
+        };
+
+        fs.writeFile("/home/john/atlas-bot/json-library/musicVolume.json", JSON.stringify(volumeArray), (err) => {
+            if (err) console.log(err);
+        });
+    }
+
+    let guildVolume = volumeArray[message.guild.id].volume;
+*/
     const queueConstruct = {
         textChannel: message.channel,
         voiceChannel: voiceChannel,
         connection: null,
         songs: [],
-        volume: 5,
+        volume: 0.1,
         playing: false,
     };
 
