@@ -82,6 +82,7 @@ module.exports.run = async (atlas, message, arguments, prefix, queue) => {
                 if (serverQueue.songs.length > 0) stream(serverQueue);
                 else {
                     serverQueue.playing = false;
+                    dispatcher.destroy();
                 }
             })
             .on('error', error => {
