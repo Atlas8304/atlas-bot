@@ -32,8 +32,18 @@
     }
   },
   "Music Commands": {
-    "djsearch": {
-      "simple":  "Search for a song.",
+    "djjoin": {
+      "simple":  "Join a voice channel.",
+      "detailed": "To Build",
+      "example": ""
+    },
+    "djleave": {
+      "simple":  "Join from the currently connected voice channel.",
+      "detailed": "To Build",
+      "example": ""
+    },
+    "djplay": {
+      "simple":  "Play a song from a provided URL",
       "detailed": "To Build",
       "example": ""
     }
