@@ -1,12 +1,15 @@
 const Discord = require("discord.js");
 const ytdl = require('ytdl-core');
+const ytsearch = require('youtube-search');
+const isUrl = require("is-url");
+const {ytapi} = require("../../json/private");
 
 module.exports = {
     name: 'djplay',
     description: 'A simple ping to the bot to see if it will respond.',
     aliases: ['djplay', 'play', 'queuesong', 'startmusic'],
     usage: '+djplay',
-    async run (atlas, message, params, guildInfo) {
+    async run(atlas, message, params, guildInfo) {
         let serverQueue = atlas.queue.get(message.guild.id);
         let voiceChannel = message.member.voiceChannel;
         let botChannel = message.guild.me.voiceChannel;
@@ -47,7 +50,41 @@ module.exports = {
             return message.reply('I need the permission [Speak] to play music!');
         }
 
-        let songInfo = await ytdl.getInfo(params.join(" "));
+        let songSearch = params.join(" ");
+
+        if (!isUrl(songSearch)) {
+            let opts = {
+                part: "snippet",
+                maxResults: 1,
+                safeSearch: "none",
+                key: ytapi
+            };
+
+            console.log(opts);
+
+            try {
+                songSearch = await ytsearch(songSearch, opts);
+                console.log(songSearch);
+                songSearch = songSearch.results[0].link;
+                console.log(songSearch);
+            } catch (error) {
+                console.log(error);
+                return message.reply("I'm sorry, I couldn't find that song");
+            }
+
+        } else {
+
+        }
+
+        let songInfo;
+
+        try {
+            songInfo = await ytdl.getInfo(songSearch);
+        } catch (error) {
+            console.log(error);
+            return message.reply("I'm sorry, I couldn't find that song");
+        }
+
         let song = {
             title: songInfo.title,
             url: songInfo.video_url,
@@ -79,7 +116,7 @@ module.exports = {
             serverQueue.playing = true;
             const streamFrom = ytdl(songToPlay.url, {
                 quality: "highestaudio",
-                highWaterMark: 1<<25
+                highWaterMark: 1 << 25
             });
             const streamOptions = {
                 bitrate: '44100',
