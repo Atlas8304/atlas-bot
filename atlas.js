@@ -16,7 +16,8 @@ autoload.autoload(atlas);
 
 Mongoose.connect(`mongodb://${priv.dbuser}:${priv.dbpwd}@localhost:27017/atlas`,
     {useNewUrlParser: true,
-    useFindAndModify: false}) //Create DB connection
+    useFindAndModify: false,
+    useCreateIndex: true}) //Create DB connection
     .catch(err => console.error(err));
 
 atlas.login(priv.token) //Send login Token to log into discord
