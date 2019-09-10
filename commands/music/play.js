@@ -84,15 +84,15 @@ module.exports = {
             console.log(error);
             return message.reply("I'm sorry, I couldn't find that song");
         }
-
+        
         let song = {
-            title: songInfo.title,
+            title: songInfo.player_response.videoDetails.title,
             url: songInfo.video_url,
-            thumbnail: songInfo.thumbnail_url,
+            thumbnail: songInfo.player_response.videoDetails.thumbnail.thumbnails.pop().url,
             author: {
                 name: songInfo.author.name,
                 avatar: songInfo.author.avatar,
-                url: songInfo.author.user_url
+                url: songInfo.author.channel_url
             }
         };
 
