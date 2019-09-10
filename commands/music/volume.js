@@ -33,7 +33,7 @@ module.exports = {
             return ;
         }
 
-        if(params === undefined || isNaN(params[0] || params[0]) > 200) return message.reply(`Please specify a valid volume.`);
+        if(params === undefined || isNaN(params[0]) || params[0] > 200) return message.reply(`Please specify a valid volume.`);
 
         let volume = params[0] / 100;
         serverQueue.connection.dispatcher.setVolume(volume);
